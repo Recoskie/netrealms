@@ -8,11 +8,12 @@ from engine import player
 from engine import maps
 from engine import sprite
 from engine import pathfinding
+from engine import lighting
 
 pygame.init()
 
 icon = pygame.image.load("icon.png")
-pygame.display.set_caption("pyrealms")
+pygame.display.set_caption("netrealms")
 pygame.display.set_icon(icon)
 
 screen = pygame.display.set_mode((800, 600))#, pygame.FULLSCREEN)
@@ -32,12 +33,14 @@ Player.sprites['playerChest'] = sprite.Sprite("resources/gfx/sprites/TORSO_robe_
 
 Player.setPlayerName("Player1")
 
-#start background music
 pygame.mixer.music.load("resources/music/tjungle.mp3")
 pygame.mixer.music.play(-1, 0.0)
 pygame.mixer.music.set_volume(0.7)
 
 running = True
+
+lightMap = lighting.LightMap(screen, 200)
+lightMap.addLight(100, Player, 100)
 
 while running:
         clock.tick(60)
@@ -75,6 +78,8 @@ while running:
                         Player.pathfinder.resetPathFinder()
                         Player.pathfinder.calculatePath(screen, mx, my)
 
+
+        lightMap.draw()
 
         pygame.display.flip()
 

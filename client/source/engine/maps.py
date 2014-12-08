@@ -5,27 +5,28 @@ class Map:
 
     def __init__(self, screen, mapNum):
         self.screen = screen
-        self.load(mapNum)
 
-    properties = dict(
-        name = str,
-        npcs = [],
-        items = [],
-        players = [],
-        height = int,
-        width = int
-    )
-
-    tiles = dict(
-        tileset = [],
-        blocked = [],
-        height = 0,
-        width = 0,
-        layers = dict(
-            ground = [],
-            fringe = []
+        self.properties = dict(
+            name = str,
+            npcs = [],
+            items = [],
+            players = [],
+            height = int,
+            width = int
         )
-    )
+
+        self.tiles = dict(
+            tileset = [],
+            blocked = [],
+            height = 0,
+            width = 0,
+            layers = dict(
+                ground = [],
+                fringe = []
+            )
+        )
+
+        self.load(mapNum)
 
     def load(self, mapNum):
         parser = ConfigParser.ConfigParser()

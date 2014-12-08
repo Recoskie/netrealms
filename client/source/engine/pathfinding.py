@@ -10,13 +10,13 @@ class Pathfinder:
         self.unit = unit
         self.screen = screen
 
-    variables = dict(
-        visitedList = [],
-        pathFinderPoints = [],
-        pathPoint = 0,
-        pathEnd = True,
-        pathPoints = []
-    )
+        self.variables = dict(
+            visitedList = [],
+            pathFinderPoints = [],
+            pathPoint = 0,
+            pathEnd = True,
+            pathPoints = []
+        )
 
     def calculatePath(self, screen, x, y):
         self.variables['pathPoint'] = 0

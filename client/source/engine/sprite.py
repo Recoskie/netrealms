@@ -3,11 +3,11 @@ import pygame
 class Sprite:
 
 	def __init__(self, spritesheet, tilewidth, tileheight):
-		self.tileData = {
-			'tiles': [],
-			'tilewidth': 0,
-			'tileheight': 0
-		}
+		self.tileData = dict(
+			tiles = [],
+			tilewidth = 0,
+			tileheight = 0
+		)
 
 		self.load(spritesheet, tilewidth, tileheight)
 
