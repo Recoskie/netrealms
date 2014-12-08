@@ -8,72 +8,72 @@ class Player:
         self.currentMap = mapObject
         self.pathfinder = None
 
-    properties = dict(
-        name = "",
-        inventory = [],
-        equipment = [],
-        sitting = False,
-        mounted = False,
-        resting = False,
-        faction = 0,
-        pclass = 0,
-        currentMap = 0
-    )
+        self.properties = dict(
+            name = "",
+            inventory = [],
+            equipment = [],
+            sitting = False,
+            mounted = False,
+            resting = False,
+            faction = 0,
+            pclass = 0,
+            currentMap = 0
+        )
 
-    network = dict(
-        connected = False,
-        ping = 0
-    )
+        self.network = dict(
+            connected = False,
+            ping = 0
+        )
 
-    animations = dict(
-        animIdle = 0,
-        animLeft = 0, 
-        animRight = 0, 
-        animUp = 0, 
-        animDown = 0
-    )
-    
-    sprites = dict(
-        playerBody = [],
-        playerFeet = [],
-        playerLegs = [],
-        playerChest = [],
-        playerHead = []
-    )
+        self.animations = dict(
+            animIdle = 0,
+            animLeft = 0, 
+            animRight = 0, 
+            animUp = 0, 
+            animDown = 0
+        )
+        
+        self.sprites = dict(
+            playerBody = [],
+            playerFeet = [],
+            playerLegs = [],
+            playerChest = [],
+            playerHead = []
+        )
 
-    pathfinding = dict(
-        finderPoints = [],
-        currentPoint = 0,
-        pathEnd = True
-    )
+        self.pathfinding = dict(
+            finderPoints = [],
+            currentPoint = 0,
+            pathEnd = True
+        )
 
-    stats = dict(
-        level = int,
-        experience = int,
-        health = float,
-        kills = int,
-        deaths = int,
-        stamina = float,
-        mana = float
-    )
+        self.stats = dict(
+            level = int,
+            experience = int,
+            health = float,
+            kills = int,
+            deaths = int,
+            stamina = float,
+            mana = float
+        )
 
-    skills = dict(
-        woodcutting = int,
-        cooking = int,
-        attack = int
-    )
+        self.skills = dict(
+            woodcutting = int,
+            cooking = int,
+            attack = int
+        )
 
-    physics = dict(
-        x = 0,
-        y = 0,
-        speed = 5,
-        direction = 0
-    )
+        self.physics = dict(
+            x = 0,
+            y = 0,
+            speed = 5,
+            direction = 0
+        )
 
-    oldPos = dict(
-        x = int,
-        y = int
-    )
+        self.oldPos = dict(
+            x = int,
+            y = int
+        )
 
     def isColliding(self, posX, posY, blockedTiles):
 

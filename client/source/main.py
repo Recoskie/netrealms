@@ -23,6 +23,19 @@ clock = pygame.time.Clock()
 currentMap = maps.Map(screen, "0")
 
 Player = player.Player(currentMap, screen)
+Player2 = player.Player(currentMap, screen)
+
+Player2.physics['x'] = 100
+Player2.physics['y'] = 100
+Player2.setPlayerName("NPC")
+
+Player2.sprites['playerBody'] = sprite.Sprite("resources/gfx/sprites/BODY_male.png", 64, 64)
+Player2.sprites['playerFeet'] = sprite.Sprite("resources/gfx/sprites/FEET_shoes_brown.png", 64, 64)
+Player2.sprites['playerLegs'] = sprite.Sprite("resources/gfx/sprites/LEGS_robe_skirt.png", 64, 64)
+Player2.sprites['playerHead'] = sprite.Sprite("resources/gfx/sprites/HEAD_robe_hood.png", 64, 64)
+Player2.sprites['playerChest'] = sprite.Sprite("resources/gfx/sprites/TORSO_robe_shirt_brown.png", 64, 64)
+
+
 Player.pathfinder = pathfinding.Pathfinder(currentMap, Player, screen)
 
 Player.sprites['playerBody'] = sprite.Sprite("resources/gfx/sprites/BODY_male.png", 64, 64)
@@ -40,7 +53,8 @@ pygame.mixer.music.set_volume(0.7)
 running = True
 
 lightMap = lighting.LightMap(screen, 200)
-lightMap.addLight(100, Player, 100)
+lightMap.addLight(200, Player, 150)
+lightMap.addLight(100, Player2, 100)
 
 while running:
         clock.tick(60)
@@ -79,6 +93,7 @@ while running:
                         Player.pathfinder.calculatePath(screen, mx, my)
 
 
+        Player2.drawPlayer(screen, 0)
         lightMap.draw()
 
         pygame.display.flip()

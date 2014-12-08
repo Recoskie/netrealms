@@ -33,9 +33,19 @@ class LightSource:
 		size = self.size
 		x, y = self.source.physics['x'] + 32, self.source.physics['y'] + 48 #position of light source
 
-		fraction = size * 50 / 100
-		tempsize = size - fraction
-		pygame.surfarray.pixels_alpha(self.lightMap.image)[x - size / 2:x + size / 2, y - size / 2:y + size / 2] = self.luminosity + fraction
-		pygame.surfarray.pixels_alpha(self.lightMap.image)[x - tempsize / 2:x + tempsize / 2, y - tempsize / 2:y + tempsize / 2] = self.luminosity
+		if self.lightMap.alpha > self.luminosity:
+
+			tempsize = size - 1
+
+			lumino = self.luminosity
+
+			while tempsize > 1:
+				if lumino > 0:
+					lumino = lumino - 1
+				pygame.surfarray.pixels_alpha(self.lightMap.image)[x - tempsize / 2:x + tempsize / 2, y - tempsize / 2:y + tempsize / 2] = lumino
+				tempsize = tempsize - 1
+			#tempsize = fraction
+			pygame.surfarray.pixels_alpha(self.lightMap.image)[x - tempsize / 2:x + tempsize / 2, y - tempsize / 2:y + tempsize / 2] = lumino
+
 
 		
