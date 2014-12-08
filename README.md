@@ -1,4 +1,4 @@
-py-realms
+netrealms
 =========
 
-An open-source 2D MMORPG engine, written in Python
+An open-source 2D MMORPG engine, written in Python & NodeJS

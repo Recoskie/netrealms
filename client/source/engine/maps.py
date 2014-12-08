@@ -57,8 +57,6 @@ class Map:
                 return(True)
         return(False)
 
-
-
     def DrawGround(self):
         for layer in self.tiles['layers']['ground']:
             for map_y, line in enumerate(layer):
@@ -67,7 +65,7 @@ class Map:
                             for i in tilenums:
                                     tilex = int(i[0])
                                     tiley = int(i[1])
-                                    self.screen.blit(self.tiles['tileset'].tiles[tilex][tiley], (map_x * self.tiles['width'], map_y * self.tiles['height']))
+                                    self.screen.blit(self.tiles['tileset'].tileData['tiles'][tilex][tiley], (map_x * self.tiles['width'], map_y * self.tiles['height']))
                                     map_x = map_x + 1
                                     if map_y == 32:
                                             map_x = 0
@@ -80,7 +78,7 @@ class Map:
                             for i in tilenums:
                                     tilex = int(i[0])
                                     tiley = int(i[1])
-                                    self.screen.blit(self.tiles['tileset'].tiles[tilex][tiley], (map_x*self.tiles['width'], map_y*self.tiles['height']))
+                                    self.screen.blit(self.tiles['tileset'].tileData['tiles'][tilex][tiley], (map_x*self.tiles['width'], map_y*self.tiles['height']))
                                     map_x = map_x + 1
                                     if map_y == 32:
                                             map_x = 0

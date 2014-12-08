@@ -33,7 +33,7 @@ Player.sprites['playerChest'] = sprite.Sprite("resources/gfx/sprites/TORSO_robe_
 Player.setPlayerName("Player1")
 
 #start background music
-pygame.mixer.music.load("resources/music/sketchy2.mp3")
+pygame.mixer.music.load("resources/music/tjungle.mp3")
 pygame.mixer.music.play(-1, 0.0)
 pygame.mixer.music.set_volume(0.7)
 
@@ -56,25 +56,8 @@ while running:
         if key[K_ESCAPE]:
                 sys.exit()
                 break
-        
-        #move player
-        if key[K_LEFT] or key[K_a]:
-                P[Player].resetPathFinder()
-                P[Player].playerMoveLeft(screen)
-                
-        elif key[K_RIGHT] or key[K_d]:
-                P[Player].resetPathFinder()
-                P[Player].playerMoveRight(screen)
-                
-        elif key[K_UP] or key[K_w]:
-                P[Player].resetPathFinder()
-                P[Player].playerMoveUp(screen)
 
-        elif key[K_DOWN] or key[K_s]:
-                P[Player].resetPathFinder()
-                P[Player].playerMoveDown(screen)
-
-        elif Player.pathfinder.checkPathEnd():
+        if Player.pathfinder.checkPathEnd():
                 Player.drawPlayer(screen, 0)
 
         #set the player speed

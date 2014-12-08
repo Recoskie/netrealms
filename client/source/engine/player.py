@@ -144,11 +144,11 @@ class Player:
             if self.pathfinder.variables['pathEnd']:
                 self.physics['x'], self.physics['y'] = self.oldpos['x'], self.oldpos['y']
                 
-        screen.blit(self.sprites['playerBody'].tiles[spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
-        screen.blit(self.sprites['playerFeet'].tiles[spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
-        screen.blit(self.sprites['playerLegs'].tiles[spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
-        screen.blit(self.sprites['playerChest'].tiles[spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
-        screen.blit(self.sprites['playerHead'].tiles[spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
+        screen.blit(self.sprites['playerBody'].tileData['tiles'][spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
+        screen.blit(self.sprites['playerFeet'].tileData['tiles'][spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
+        screen.blit(self.sprites['playerLegs'].tileData['tiles'][spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
+        screen.blit(self.sprites['playerChest'].tileData['tiles'][spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
+        screen.blit(self.sprites['playerHead'].tileData['tiles'][spriteX][self.physics['direction']], (self.physics['x'], self.physics['y']))
         
         textFont = pygame.font.Font(None, 20)
         playername = textFont.render(self.properties['name'], True, (0, 0, 0))

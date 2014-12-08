@@ -3,11 +3,13 @@ import pygame
 class Sprite:
 
 	def __init__(self, spritesheet, tilewidth, tileheight):
-		self.tiles, self.tileheight, self.tilewidth = self.load(spritesheet, tilewidth, tileheight)
+		self.tileData = {
+			'tiles': [],
+			'tilewidth': 0,
+			'tileheight': 0
+		}
 
-	tileheight = 0
-	tilewidth = 0
-	tiles = []
+		self.load(spritesheet, tilewidth, tileheight)
 
 	def load(self, spritesheet, tilewidth, tileheight):
 	    spritesheet = pygame.image.load(spritesheet).convert_alpha()
@@ -22,4 +24,4 @@ class Sprite:
 	            rect = (tile_x * tilewidth, tile_y * tileheight, tilewidth, tileheight)
 	            line.append(spritesheet.subsurface(rect))
 
-	    return sprites, tileheight, tilewidth
+	    self.tileData['tiles'], self.tileData['tileheight'], self.tileData['tilewidth'] = sprites, tileheight, tilewidth
