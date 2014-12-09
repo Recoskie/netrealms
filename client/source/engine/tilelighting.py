@@ -37,6 +37,7 @@ class LightSource:
         size = self.size
         x, y = self.source.physics['x'], self.source.physics['y'] #position of light source
 
+        #center of player
         x = x + 32
         y = y + 48
 
@@ -48,4 +49,17 @@ class LightSource:
         x = x * 8
         y = y * 8
 
-        pygame.surfarray.pixels_alpha(self.lightMap.image)[x:x+8, y:y+8] = self.alpha
+        xp = x
+        yp = y
+
+        x0 = int(round(x)) # x center
+        y0 = int(round(y)) # y center
+        r = size  # radius
+
+        for x in range(x0 - r, x0 + r + 1):
+            ydist = int(round(math.sqrt(r**2 - (x0 - x)**2), 1))
+            for y in range(y0 - ydist, y0 + ydist + 1):
+                #x * t, y * t, x * t + t, y * t + t
+                pygame.surfarray.pixels_alpha(self.lightMap.image)[x:x + 8, y:y + 8] = self.alpha
+
+        #set the tile alpha

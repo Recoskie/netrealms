@@ -16,7 +16,7 @@ icon = pygame.image.load("icon.png")
 pygame.display.set_caption("netrealms")
 pygame.display.set_icon(icon)
 
-fullscreen = True
+fullscreen = False
 
 if fullscreen:
         screen = pygame.display.set_mode((1366, 768), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
