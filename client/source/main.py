@@ -8,7 +8,7 @@ from engine import player
 from engine import maps
 from engine import sprite
 from engine import pathfinding
-from engine import lighting
+from engine import tilelighting
 
 pygame.init()
 
@@ -16,7 +16,12 @@ icon = pygame.image.load("icon.png")
 pygame.display.set_caption("netrealms")
 pygame.display.set_icon(icon)
 
-screen = pygame.display.set_mode((800, 600))#, pygame.FULLSCREEN)
+fullscreen = True
+
+if fullscreen:
+        screen = pygame.display.set_mode((1366, 768), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+else:
+        screen = pygame.display.set_mode((800,600))#(1366, 768), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
 
 clock = pygame.time.Clock()
 
@@ -52,12 +57,11 @@ pygame.mixer.music.set_volume(0.7)
 
 running = True
 
-lightMap = lighting.LightMap(screen, 200)
-lightMap.addLight(200, Player, 150)
-lightMap.addLight(100, Player2, 100)
+lightMap = tilelighting.LightMap(screen, 200)
+light = lightMap.addLight(5, Player, 50)
 
 while running:
-        clock.tick(60)
+        clock.tick(30)
 
         screen.fill((255,255,255))
 
@@ -71,6 +75,8 @@ while running:
 
         #end game
         if key[K_ESCAPE]:
+                if fullscreen:
+                        pygame.display.toggle_fullscreen()
                 sys.exit()
                 break
 
