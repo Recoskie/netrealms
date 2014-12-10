@@ -8,7 +8,7 @@ from engine import player
 from engine import maps
 from engine import sprite
 from engine import pathfinding
-from engine import tilelighting
+from engine import lighting
 
 pygame.init()
 
@@ -19,7 +19,7 @@ pygame.display.set_icon(icon)
 fullscreen = False
 
 if fullscreen:
-        screen = pygame.display.set_mode((1366, 768), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+        screen = pygame.display.set_mode((1366, 768), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.ASYNCBLIT)
 else:
         screen = pygame.display.set_mode((800,600))#(1366, 768), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
 
@@ -57,12 +57,17 @@ pygame.mixer.music.set_volume(0.7)
 
 running = True
 
-lightMap = tilelighting.LightMap(screen, 200)
-light = lightMap.addLight(5, Player, 50)
+darkness = 100
+
+lightMap = lighting.LightMap(screen, darkness)
+#lightMap = tilelighting.LightMap(screen, 200)
+light2 = lightMap.addLight(6, Player2)
+light = lightMap.addLight(6, Player)
+lightx = lightMap.addStaticLight(6, 500, 500)
+lightxp = lightMap.addStaticLight(6, 200, 200)
 
 while running:
-        clock.tick(30)
-
+        clock.tick(60)
         screen.fill((255,255,255))
 
         key = pygame.key.get_pressed()
@@ -72,6 +77,17 @@ while running:
 
         if not Player.pathfinder.checkPathEnd():
                 Player.pathfinder.pathMoveStep(screen)
+
+        if key[K_PAGEUP]:
+                if darkness < 255:
+                        darkness = darkness + 5
+                        lightMap.set_alpha(darkness)
+
+        if key[K_PAGEDOWN]:
+                if darkness > 0:
+                        darkness = darkness - 5
+                        lightMap.set_alpha(darkness)
+
 
         #end game
         if key[K_ESCAPE]:
@@ -85,9 +101,9 @@ while running:
 
         #set the player speed
         if key[K_LSHIFT]:
-                Player.setSpeed(7)
-        else:
                 Player.setSpeed(5)
+        else:
+                Player.setSpeed(2)
 
         #record mouse down position and start pathfinding
         for event in pygame.event.get():
@@ -101,6 +117,10 @@ while running:
 
         Player2.drawPlayer(screen, 0)
         lightMap.draw()
+
+        textFont = pygame.font.Font(None, 20)
+        fps = textFont.render("%.0f" % round(clock.get_fps(),0) + " fps", True, (250, 250, 250))
+        screen.blit(fps, (0,0))
 
         pygame.display.flip()
 

@@ -2,6 +2,14 @@ import pygame
 import math
 import numpy
 
+class Static:
+
+    def __init__(self, xpos, ypos):
+        self.physics = dict(
+            x = xpos,
+            y = ypos
+        )
+
 class LightMap:
 
     def __init__(self, screen, alpha):
@@ -18,48 +26,67 @@ class LightMap:
                 light.draw()
 
 
-                self.image.unlock()
-                self.screen.blit(self.image, (0, 0))
-                self.image.lock()
+            self.image.unlock()
+            self.screen.blit(self.image, (0, 0))
+            self.image.lock()
 
-    def addLight(self, size, source, alpha):
-        self.lights.append(LightSource(size, source, self, alpha))
+    def set_alpha(self, alpha):
+        self.alpha = alpha
+
+    def addLight(self, size, source):
+        self.lights.append(LightSource(size, source, self))
+
+    def addStaticLight(self, size, x, y):
+        self.lights.append(LightSource(size, Static(x, y), self))
 
 class LightSource:
 
-    def __init__(self, size, source, lightMap, alpha):
+    def __init__(self, size, source, lightMap):
         self.size = size
         self.source = source
         self.lightMap = lightMap
-        self.alpha = alpha
 
     def draw(self):
         size = self.size
         x, y = self.source.physics['x'], self.source.physics['y'] #position of light source
 
+        #Light tile size
+
+        tile_size =  16
+
         #center of player
         x = x + 32
         y = y + 48
 
-        #get the closest tile
-        x = math.floor(x / 8)
-        y = math.floor(y / 8)
+        x = int( x / tile_size + 0.5 ) * tile_size # x center
+        y = int( y / tile_size + 0.5 ) * tile_size # y center
 
-        #get the pixel value of the closest tile
-        x = x * 8
-        y = y * 8
+        x0 = x
+        y0 = y
 
-        xp = x
-        yp = y
+        r = size # radius
 
-        x0 = int(round(x)) # x center
-        y0 = int(round(y)) # y center
-        r = size  # radius
+        #to calculate the difference from the circle center
+
+        CurX = x0
+        CurY = y0
+
+        t1 = 0
+        t2 = 0
+
+        #calculate the circle points
 
         for x in range(x0 - r, x0 + r + 1):
             ydist = int(round(math.sqrt(r**2 - (x0 - x)**2), 1))
             for y in range(y0 - ydist, y0 + ydist + 1):
                 #x * t, y * t, x * t + t, y * t + t
-                pygame.surfarray.pixels_alpha(self.lightMap.image)[x:x + 8, y:y + 8] = self.alpha
 
-        #set the tile alpha
+                t1 = x0 + ( (x-CurX) * tile_size )
+                t2 = y0 + ( (y-CurY) * tile_size )
+
+                px = math.floor(t1 / tile_size + 0.5)
+                py = math.floor(t2 / tile_size + 0.5)
+                if px >= 0 and px < 64 and py >= 0 and py < 48:
+                    tile_alpha = int(self.lightMap.alpha * math.sqrt((x0 - x)**2 + (y0 - y)**2) / r)
+                    if pygame.surfarray.pixels_alpha(self.lightMap.image)[t1+1, t2+1 ] > tile_alpha:
+                        pygame.surfarray.pixels_alpha(self.lightMap.image)[t1:t1 + ( tile_size + 1 ), t2:t2 + ( tile_size + 1 ) ] = tile_alpha

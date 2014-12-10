@@ -2,116 +2,113 @@ import pygame
 import math
 import numpy
 
+class Static:
+
+    def __init__(self, xpos, ypos):
+        self.physics = dict(
+            x = xpos,
+            y = ypos
+        )
+
 class LightMap:
 
     def __init__(self, screen, alpha):
         self.screen = screen
         self.alpha = alpha
-        self.lights = []
         self.tiles = []
-        self.surface = pygame.Surface((1024, 768), pygame.SRCALPHA)
+        self.lights = []
+        self.tile_size = 16
+        self.lightpoints = []
+        self.drawpoints = []
         self.create()
 
     def create(self):   
         columns = []
         for row in range(64):
             for column in range(48):           #These dimensions mean that the screen is broken up into a grid of ten by ten smaller tiles for lighting.
-                tile = pygame.Surface((16, 16))
-                tile.fill(pygame.Color(0, 0, 0))
-                tile.set_alpha(self.alpha)
-                tile.convert_alpha()
+                tile = pygame.Surface((self.tile_size, self.tile_size), pygame.ASYNCBLIT| pygame.SRCALPHA)
+                tile.fill(pygame.Color(0, 0, 0, self.alpha))
                 columns.append(tile)
             self.tiles.append(columns)#this now gives you a matrix of surfaces to set alphas to
+            columns = []
 
     def draw(self):
+        for light in self.lights:
+            light.draw()
+
+        for point in self.drawpoints:
+                self.tiles[point[0]][point[1]].fill(pygame.Color(0, 0, 0, point[2]))    
+
         for row in range(64):
             for column in range(48):
-                self.screen.blit(self.tiles[row][column], (row * 16, column * 16))
+                if self.tiles[row][column].get_alpha > 0:
+                    self.screen.blit(self.tiles[row][column], (row * self.tile_size, column * self.tile_size))
+                self.tiles[row][column].fill(pygame.Color(0, 0, 0, self.alpha))
 
-    def set_all(alpha):
-        for column in tiles:
+        self.lightpoints = []
+        self.drawpoints = []
+
+    def addLight(self, size, source):
+        self.lights.append(LightSource(size, source, self))
+
+    def addStaticLight(self, size, x, y):
+        self.lights.append(LightSource(size, Static(x, y), self))
+
+    def set_alpha(self, alpha):
+        for column in self.tiles:
             for tile in column:
-                tile.set_alpha(alpha)
+                self.alpha = alpha
+                tile.fill(pygame.Color(0, 0, 0, alpha))
+                return
 
-    def set_tile(x,y,alpha):        #the x and y args refer to the location on the matrix, not on the screen. So the tile one to the right and one down from the topleft corner, with the topleft coordinates of (64,64), would be sent as 1, 1
-        Xindex = 0
-        Yindex = 0
-        for column in tiles:
-            for tile in column:
-                if Xindex == x and Yindex == y:
-                    tile.set_alpha(alpha)            #when we find the correct tile in the coordinates, we set its alpha and end the function
-                    return
-                x += 1  
+    def add_tile(self, x, y, alpha):
+        should_draw = True
+        if len(self.lightpoints) > 0:
+            for p in self.lightpoints:
+                if p[0] == x and p[1] == y:
+                    if p[2] < alpha:
+                        should_draw = False
 
+            if should_draw:
+                point = [x, y, alpha]
+                self.drawpoints.append(point) 
 
-    def drawLight(self, px, py, lightSize):
+            point = [x, y, alpha]
+            self.lightpoints.append(point)
+                
+        else:
+            point = [x, y, alpha]
+            self.lightpoints.append(point)
 
-    px = px << 1
-    py = py << 1
+    def set_tile(self, x, y, alpha):        #the x and y args refer to the location on the matrix, not on the screen. So the tile one to the right and one down from the topleft corner, with the topleft coordinates of (64,64), would be sent as 1, 1
+        self.tiles[x][y].fill(pygame.Color(0, 0, 0, alpha))            
 
-    x1 = px
-    x2 = px + 1
-    y2 = py + 24
+class LightSource:
 
-    if (y2>(TileMap.tileMapH< <1)) y2=(TileMap.tileMapH<<1);
+    def __init__(self, size, source, lightMap):
+        self.size = size
+        self.source = source
+        self.lightMap = lightMap
 
-    int shadeY;
-    int light;
+    def draw(self):
+        size = self.size
+        x, y = self.source.physics['x'], self.source.physics['y'] #position of light source
 
-    int baseLight=256/(lightSize<<3);
-    int lightX;
+        #center of player
+        x = x + 32
+        y = y + 48
 
-    int count=0;
+        #get the closest tile
+        x = math.floor(x / self.lightMap.tile_size + 0.5)
+        y = math.floor(y / self.lightMap.tile_size + 0.5)
 
-    while (count<24) {
-    lightX=count*count;
+        x0 = int(x) # x center
+        y0 = int(y) # y center
+        r = size  # radius
 
-    if (x1>=0 && x1
-
-    y1=py-24;
-    if (y1<0) y1=0;
-
-    while (y1<=y2) {
-    if (y1>=0 && y1 if (y1 else shadeY=y1-py;
-
-    light=256- ((baseLight)*( (lightX)+ (shadeY*shadeY) ));
-    if (light>255) light=255;
-
-    if (light>myWorld.fogMap[x1+(y1*(TileMap.tileMapW< <1))]) {
-    if (myWorld.isEdge(x1>>1, y1>>1) || myWorld.getTileRenderMap(x1>>1,y1>>1)>=48) {
-    myWorld.fogMap[x1+(y1*(TileMap.tileMapW< <1))]=light;
-    }
-    }
-
-    }
-    y1++;
-    }
-    }
-    x1--;
-
-    if (x2>=0 && x2
-
-    y1=py-24;
-    if (y1<0) y1=0;
-
-    while (y1<=y2) {
-    if (y1>=0 && y1 if (y1 else shadeY=y1-py;
-
-    light=256- ((baseLight)*( (lightX)+ (shadeY*shadeY) ));
-    if (light>255) light=255;
-
-    if (light>myWorld.fogMap[x2+(y1*(TileMap.tileMapW< <1))]) {
-    if (myWorld.isEdge(x2>>1, y1>>1) || myWorld.getTileRenderMap(x2>>1,y1>>1)>=48) {
-    myWorld.fogMap[x2+(y1*(TileMap.tileMapW<<1))]=light;
-    }
-    }
-
-    }
-    y1++;
-    }
-    }
-    x2++;
-
-    count++;
-    }
-    }
+        for x in range(x0 - r, x0 + r + 1):
+            ydist = int(round(math.sqrt(r**2 - (x0 - x)**2), 1))
+            for y in range(y0 - ydist, y0 + ydist + 1):
+                if x >= 0 and x < 64 and y >= 0 and y < 48:
+                    tile_alpha = int(self.lightMap.alpha * math.sqrt((x0 - x)**2 + (y0 - y)**2) / r)
+                    self.lightMap.add_tile(x, y, tile_alpha)

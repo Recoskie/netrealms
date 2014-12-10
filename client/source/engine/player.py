@@ -1,5 +1,6 @@
 import pygame
 import pathfinding
+from time import sleep
 
 class Player:
 
@@ -75,6 +76,8 @@ class Player:
             y = int
         )
 
+    last = pygame.time.get_ticks()
+
     def isColliding(self, posX, posY, blockedTiles):
 
             for i in range(0,len(blockedTiles)-2,2):
@@ -98,46 +101,63 @@ class Player:
 
     def setSpeed(self, speed):
         self.physics['speed'] = speed
+        self.cooldown = 100 / speed
 
     def moveRight(self, screen):
         self.oldpos = self.physics['x'], self.physics['y']
         self.physics['x'] += self.physics['speed']
         self.physics['direction'] = 3
         self.drawPlayer(screen, self.animations['animRight'])
-        self.animations['animRight'] += 1
-        if self.animations['animRight'] == 9:
-           self.animations['animRight'] = 0
-        pygame.time.wait(60)
+
+        now = pygame.time.get_ticks()
+        if now - self.last >= self.cooldown:
+            self.last = now
+            self.animations['animRight'] += 1
+            if self.animations['animRight'] == 9:
+               self.animations['animRight'] = 0
+            #pygame.time.wait(60)
 
     def moveLeft(self, screen):
         self.oldpos = self.physics['x'], self.physics['y']
         self.physics['x'] -= self.physics['speed']
         self.physics['direction'] = 1
         self.drawPlayer(screen, self.animations['animLeft'])
-        self.animations['animLeft'] += 1
-        if self.animations['animLeft'] == 9:
-            self.animations['animLeft'] = 0
-        pygame.time.wait(60)
+
+        now = pygame.time.get_ticks()
+        if now - self.last >= self.cooldown:
+            self.last = now
+            self.animations['animLeft'] += 1
+            if self.animations['animLeft'] == 9:
+                self.animations['animLeft'] = 0
+            #pygame.time.wait(60)
         
     def moveUp(self, screen):
         self.oldpos = self.physics['x'], self.physics['y']
         self.physics['y'] -= self.physics['speed']
         self.physics['direction'] = 0
         self.drawPlayer(screen, self.animations['animUp'])
-        self.animations['animUp'] += 1
-        if self.animations['animUp'] == 9:
-            self.animations['animUp'] = 0
-        pygame.time.wait(60)
+
+        now = pygame.time.get_ticks()
+        if now - self.last >= self.cooldown:
+            self.last = now
+            self.animations['animUp'] += 1
+            if self.animations['animUp'] == 9:
+                self.animations['animUp'] = 0
+            #pygame.time.wait(60)
 
     def moveDown(self, screen):
         self.oldpos = self.physics['x'], self.physics['y']
         self.physics['y'] += self.physics['speed']
         self.physics['direction'] = 2
         self.drawPlayer(screen, self.animations['animDown'])
-        self.animations['animDown'] += 1
-        if self.animations['animDown'] == 9:
-            self.animations['animDown'] = 0
-        pygame.time.wait(60)
+
+        now = pygame.time.get_ticks()
+        if now - self.last >= self.cooldown:
+            self.last = now
+            self.animations['animDown'] += 1
+            if self.animations['animDown'] == 9:
+                self.animations['animDown'] = 0
+            #pygame.time.wait(60)
 
     def drawPlayer(self, screen, spriteX):
         if self.isColliding(self.physics['x'], self.physics['y'], self.currentMap.tiles['blocked']):
