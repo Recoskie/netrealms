@@ -66,12 +66,11 @@ class Pathfinder:
 
             self.variables['pathPoint'] += 1
 
+            self.unit.drawPlayer(screen, 0) #draw when changing point to stop flicker
+
             if(self.variables['pathPoint'] > len(self.variables['pathFinderPoints']) - 1):
                 self.variables['pathPoint'] = 0
                 self.variables['pathEnd'] = True
-
-
-
 
     def checkPathEnd(self):
         return self.variables['pathEnd']
@@ -102,7 +101,6 @@ class Pathfinder:
             if(i1[0]==x1 and i1[1]==y1):
                 return(False)
         return(True)
-
 
     def getMoves(self, x1, y1):
         
@@ -182,3 +180,4 @@ class Pathfinder:
 
         #if no path to destination send back start point
         return([[x1, y1]])
+        
