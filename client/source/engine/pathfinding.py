@@ -20,7 +20,7 @@ class Pathfinder:
 
     def calculatePath(self, screen, x, y):
         self.variables['pathPoint'] = 0
-        self.variables['pathFinderPoints'] = self.findPath(screen, self.unit.physics['x'] + 32, self.unit.physics['y'] + 48, x + 16, y - 16, self.currentMap.tiles['blocked'])
+        self.variables['pathFinderPoints'] = self.findPath(screen, self.unit.physics['x'] + 32, self.unit.physics['y'] + 48, int(x / 32)*32, int(y / 32 + 0.5)*32, self.currentMap.tiles['blocked'])
         self.variables['pathEnd'] = False
 
     def resetPathFinder(self):
@@ -28,23 +28,47 @@ class Pathfinder:
         self.variables['pathPoint'] = 0
         self.variables['pathEnd'] = True
 
-    def pathMoveStep(self, screen):        
-        if self.variables['pathFinderPoints'][self.variables['pathPoint']][0] - 16 < self.unit.physics['x']:
-            self.unit.moveLeft(screen)
-        elif self.variables['pathFinderPoints'][self.variables['pathPoint']][0] - (16 + self.unit.physics['speed']) > self.unit.physics['x']:
-            self.unit.moveRight(screen)
-        elif self.variables['pathFinderPoints'][self.variables['pathPoint']][1] - 32 < self.unit.physics['y']:
-            self.unit.moveUp(screen)
-        elif self.variables['pathFinderPoints'][self.variables['pathPoint']][1] - (32 + self.unit.physics['speed']) > self.unit.physics['y']:
-            self.unit.moveDown(screen)
-        else:
-            self.unit.drawPlayer(screen, 0) #draw when changing point to stop flicker
-            self.variables['pathPoint'] += 1
+    def pathMoveStep(self, screen):
+
+        #if point is players current tile position do not move player back to that tile center
+
+        if ( ( int( self.variables['pathFinderPoints'][0][0] / 32 + 0.5 ) != int( self.unit.physics['x'] / 32 - 19.5 ) ) and ( int( self.variables['pathFinderPoints'][0][1] / 32 + 0.5 ) != int( self.unit.physics['y'] / 32 + 38.5 ) ) ) and ( not ( self.variables['pathPoint'] <= 0 ) ):
+
+            if self.variables['pathFinderPoints'][self.variables['pathPoint']][0] - 16 < self.unit.physics['x']:
+                self.unit.moveLeft(screen)
+
+            elif self.variables['pathFinderPoints'][self.variables['pathPoint']][0] - (16 + self.unit.physics['speed']) > self.unit.physics['x']:
+                self.unit.moveRight(screen)
+
+            elif self.variables['pathFinderPoints'][self.variables['pathPoint']][1] - 32 < self.unit.physics['y']:
+                self.unit.moveUp(screen)
+
+            elif self.variables['pathFinderPoints'][self.variables['pathPoint']][1] - (38 + self.unit.physics['speed']) > self.unit.physics['y']:
+                self.unit.moveDown(screen)
+
+            else:
+                
+                #center X and Y to tile when tile is reached
+
+                self.unit.physics['x'] = self.variables['pathFinderPoints'][self.variables['pathPoint']][0] - 19
+                self.unit.physics['y'] = self.variables['pathFinderPoints'][self.variables['pathPoint']][1] - 38
+
+                self.unit.drawPlayer(screen, 0) #draw when changing point to stop flicker
+
+                self.variables['pathPoint'] += 1
             
+                if(self.variables['pathPoint'] > len(self.variables['pathFinderPoints']) - 1):
+                    self.variables['pathPoint'] = 0
+                    self.variables['pathEnd'] = True
+        else:
+            
+            #move past start point
+
+            self.variables['pathPoint'] += 1
+
             if(self.variables['pathPoint'] > len(self.variables['pathFinderPoints']) - 1):
                 self.variables['pathPoint'] = 0
                 self.variables['pathEnd'] = True
-
 
     def checkPathEnd(self):
         return self.variables['pathEnd']
@@ -108,7 +132,6 @@ class Pathfinder:
 
         return(MoveList)
 
-
     def findPath(self, screen, x1, y1, x2, y2, BlkTiles):
 
         IsPaths=True
@@ -137,8 +160,8 @@ class Pathfinder:
             y = PathList[0][len(PathList[0]) - 1][1]
 
             #if path reached goal return path points to goal
-            if ((x >= x2 and x <= (x2+32)) and (y >= y2 and y <= (y2+32))):
-                            return(PathList[0])
+            if ((x == x2) and (y >= y2 and y <= (y2+32))):
+                return(PathList[0])
             
             m = self.getMoves(x, y)
             
