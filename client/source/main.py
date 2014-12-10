@@ -66,6 +66,10 @@ light = lightMap.addLight(6, Player)
 lightx = lightMap.addStaticLight(6, 500, 500)
 lightxp = lightMap.addStaticLight(6, 200, 200)
 
+#the tile the mouse is over top of
+MTileY=-32
+MTileX=-32
+
 while running:
         clock.tick(60)
         screen.fill((255,255,255))
@@ -88,7 +92,6 @@ while running:
                         darkness = darkness - 5
                         lightMap.set_alpha(darkness)
 
-
         #end game
         if key[K_ESCAPE]:
                 if fullscreen:
@@ -105,26 +108,39 @@ while running:
         else:
                 Player.setSpeed(2)
 
-        #record mouse down position and start pathfinding
-        for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                        mx, my = event.pos
-
-                        #calculate path finder path points
-                        Player.pathfinder.resetPathFinder()
-                        Player.pathfinder.calculatePath(screen, mx, my)
-
-
         Player2.drawPlayer(screen, 0)
         lightMap.draw()
 
         textFont = pygame.font.Font(None, 20)
         fps = textFont.render("%.0f" % round(clock.get_fps(),0) + " fps", True, (250, 250, 250))
         screen.blit(fps, (0,0))
+        
+        #show seelected tile
+        
+        pygame.draw.rect(screen, (255, 0, 0 ), ( MTileX ,MTileY , 32, 32 ), 1 )
 
         pygame.display.flip()
 
         for event in pygame.event.get():
+                        
+                #record mouse down position and start pathfinding
+                        
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                        mx, my = event.pos
+
+                        #calculate path finder path points
+                        
+                        Player.pathfinder.resetPathFinder()
+                        Player.pathfinder.calculatePath(screen, mx, my)
+                        
+                #show the current tile mouse is over top of
+
+                if event.type == pygame.MOUSEMOTION:
+                        mx, my = event.pos
+
+                        MTileX = int( mx / 32 + 0.5 ) * 32
+                        MTileY = int( my / 32 + 0.5 ) * 32
+                
                 if event.type == QUIT:
                         running = False
                         sys.exit()
